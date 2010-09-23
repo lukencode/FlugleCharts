@@ -36,15 +36,19 @@ namespace GChart
 
         public static Line Line(LineType type)
         {
-            string typeCode = "p";
+            string typeCode = "lc";
 
             switch (type)
             {
-                case LineType.LineChart:
-                    typeCode = "lc";
-                    break;
                 case LineType.SparkLine:
                     typeCode = "ls";
+                    break;
+                case LineType.LineXY:
+                    typeCode = "lxy";
+                    break;
+                case LineType.LineChart:
+                default:
+                    typeCode = "lc";
                     break;
             }
 

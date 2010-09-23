@@ -45,11 +45,12 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LineTest.cs" />
     <Compile Include="PieTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GChart\GChart.csproj">
+    <ProjectReference Include="..\GChart\FlugleCharts.csproj">
       <Project>{83B5C89D-B451-4A25-99DC-C45E85AB206F}</Project>
       <Name>GChart</Name>
     </ProjectReference>

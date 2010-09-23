@@ -3,8 +3,6 @@ namespace GChart.Charts
 {
     public class Line : GChart<Line>
     {
-        private string _chartType;
-
         internal Line(string chartType)
         {
             _chartType = chartType;
@@ -24,6 +22,7 @@ namespace GChart.Charts
     public enum LineType
     {
         LineChart,
-        SparkLine
+        SparkLine,
+        LineXY
     }
 }

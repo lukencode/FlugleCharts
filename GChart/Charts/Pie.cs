@@ -4,7 +4,6 @@ namespace GChart.Charts
 {
     public class Pie : GChart<Pie>
     {
-        private string _chartType;
         private bool _showLabels;
 
         internal Pie(string chartType)

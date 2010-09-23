@@ -6,7 +6,6 @@ namespace GChart.Charts
 {
     public class Bar : GChart<Bar>
     {
-        private string _chartType;
         private string _barGroup;
 
         private List<string> _customLabels;

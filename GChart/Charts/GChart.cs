@@ -2,12 +2,15 @@
 using System.Linq;
 using System.Text;
 using GCharts.Data;
+using System.Web;
 
 namespace GChart.Charts
 {
     public abstract class GChart<TChart> where TChart : GChart<TChart>
     {
         protected static string _baseUrl = "http://chart.apis.google.com/chart?";
+
+        protected string _chartType;
 
         protected string _title;
         protected string _titleColor;
@@ -65,6 +68,13 @@ namespace GChart.Charts
             return (TChart)this;
         }
 
+        public TChart HideAxes()
+        {
+            _chartType += ":nda";
+
+            return (TChart)this;
+        }
+
         public TChart AddAxes(AxesPosition position, int min, int max, int step, string title)
         {
             string pos = "x";
@@ -104,24 +114,28 @@ namespace GChart.Charts
             sb.Append(_baseUrl);
 
             //build common options
-            sb.Append(string.Format("cht={0}&", GetChartType()));
-            sb.Append(string.Format("chs={0}x{1}&", _width, _height));
-            sb.Append(string.Format("chtt={0}&", _title));
+            sb.Append(string.Format("cht={0}", GetChartType()));
+            sb.Append(string.Format("&chs={0}x{1}", _width, _height));
+            if (!string.IsNullOrWhiteSpace(_title))
+            {
+                sb.Append(string.Format("&chtt={0}", HttpUtility.UrlEncode(_title)));
+            }
 
             //render options
-            sb.Append(RenderChartOptions() + "&");
-            sb.Append(BuildData() + "&");
+            sb.Append("&" + RenderChartOptions());
+            sb.Append(BuildColors());
+            sb.Append(BuildData());
 
             if (_data.Any(d => d.Any(p => !p.Label.IsNullOrEmpty())))
-                sb.Append(BuildLabels() + "&");
+                sb.Append(BuildLabels());
 
             //build legend
             if (_showLegend)
-                sb.Append(BuildLegend() + "&");
+                sb.Append("&" + BuildLegend());
 
             //build axes
             if (_axesList.Count > 0)
-                sb.Append(BuildAxes());
+                sb.Append("&" + BuildAxes());
 
             return removeDoubles(sb.ToString());
         }
@@ -146,7 +160,7 @@ namespace GChart.Charts
             var sb = new StringBuilder();
 
             //todo encoding options
-            sb.Append("chd=t:");
+            sb.Append("&chd=t:");
             foreach (var s in _data)
             {
                 sb.Append(s.RenderValues() + "|");
@@ -161,7 +175,7 @@ namespace GChart.Charts
             //render chart labels
             var sb = new StringBuilder();
 
-            sb.Append("chl=");
+            sb.Append("&chl=");
             foreach (var ds in _data)
             {
                 foreach (var p in ds)
@@ -212,6 +226,29 @@ namespace GChart.Charts
 
             var returnString = "{0}&{1}&{2}".With(types, labels, range);
             return returnString;
+        }
+
+        protected virtual string BuildColors()
+        {
+            //Check if there are any colors set
+            var colors = _data.Where(s => !string.IsNullOrWhiteSpace(s.Color)).Select(s => s.Color);
+
+            if (colors.Count() == 0)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+
+            sb.Append("&chco=");
+            foreach (var color in colors)
+            {
+                sb.Append(color + ",");
+            }
+
+            var stringColor = sb.ToString();
+            //Remove final Comma
+            return sb.ToString().Take(stringColor.Length - 1);
         }
 
         private static string removeDoubles(string url)
