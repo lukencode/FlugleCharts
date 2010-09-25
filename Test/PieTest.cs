@@ -1,8 +1,6 @@
-﻿using System;
-using GChart;
-using GCharts.Data;
+﻿using System.Diagnostics;
+using FlugleCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
 
 namespace Test
 {
@@ -27,8 +25,8 @@ namespace Test
                                   .Size(400, 200)
                                   .ShowLegend("r")
                                   .AddSeries(s1)
-                                  .AddAxes(GChart.Charts.AxesPosition.left, 0, 170, 30, "left data")
-                                  .AddAxes(GChart.Charts.AxesPosition.bottom, 1, 4, 1, "number");
+                                  .AddAxes(AxesPosition.left, 0, 170, 30, "left data")
+                                  .AddAxes(AxesPosition.bottom, 1, 4, 1, "number");
 
             Debug.WriteLine(pie.GetUrl());
 

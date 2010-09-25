@@ -1,8 +1,6 @@
-﻿using System;
-using GChart;
-using GCharts.Data;
+﻿using System.Diagnostics;
+using FlugleCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
 
 namespace Test
 {
@@ -40,8 +38,8 @@ namespace Test
                                   .ShowLegend("r")
                                   .AddSeries(s1)
                                   .AddSeries(s2)
-                                  .AddAxes(GChart.Charts.AxesPosition.left, 0, 170, 30, "left data")
-                                  .AddAxes(GChart.Charts.AxesPosition.bottom, 1, 4, 1, "number");
+                                  .AddAxes(AxesPosition.left, 0, 170, 30, "left data")
+                                  .AddAxes(AxesPosition.bottom, 1, 4, 1, "number");
 
             Debug.WriteLine(line.GetUrl());
 
@@ -97,7 +95,7 @@ namespace Test
             s1.Add(26); s1.Add(35);
             s1.Add(70); s1.Add(25);
 
-            var line = ChartBuilder.Line(GChart.Charts.LineType.SparkLine)
+            var line = ChartBuilder.Line(LineType.SparkLine)
                                   .Size(200, 125)
                                   .AddSeries(s1);
 
@@ -105,6 +103,44 @@ namespace Test
             Debug.WriteLine(url);
 
             Assert.AreEqual(url, "http://chart.apis.google.com/chart?cht=ls&chs=200x125&chco=0077CC&chd=t:27,25,60,31,25,39,25,31,26,28,80,28,27,31,27,29,26,35,70,25");
+
+        }
+
+
+        [TestMethod]
+        public void TestLine4()
+        {
+            var s1 = new Series()
+            {
+                Legend = "data",
+                Color = "00FF00"
+            };
+
+            s1.Add(80);
+            s1.Add(40);
+            s1.Add(210);
+            s1.Add(30);
+
+            var s2 = new Series()
+            {
+                Legend = "data 2",
+                Color = "FF0000"
+            };
+
+            s2.Add(370);
+            s2.Add(15);
+            s2.Add(80);
+            s2.Add(340);
+
+            var line = ChartBuilder.Line()
+                                  .Title("bar yo")
+                                  .Size(400, 200)
+                                  .ShowLegend("r")
+                                  .AddSeries(s1)
+                                  .AddSeries(s2)
+                                  .AddAxes(AxesPosition.left, "left data");
+
+            Debug.WriteLine(line.GetUrl());
 
         }
 

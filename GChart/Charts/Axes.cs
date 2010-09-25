@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GChart.Charts
+namespace FlugleCharts
 {
     public class Axes
     {
@@ -21,9 +21,16 @@ namespace GChart.Charts
 
     public enum AxesPosition
     {
+        [FlugleCharts.EnumUtils.Code("y")]
         left,
+
+        [FlugleCharts.EnumUtils.Code("r")]
         right,
+
+        [FlugleCharts.EnumUtils.Code("t")]
         top,
+
+        [FlugleCharts.EnumUtils.Code("x")]
         bottom
     }
 }

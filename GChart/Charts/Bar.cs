@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace GChart.Charts
+namespace FlugleCharts
 {
     public class Bar : GChart<Bar>
     {
@@ -73,14 +73,22 @@ namespace GChart.Charts
 
     public enum BarGroupType
     {
+        [FlugleCharts.EnumUtils.Code("g")]
         Grouped,
+
+        [FlugleCharts.EnumUtils.Code("s")]
         Stacked,
+
+        [FlugleCharts.EnumUtils.Code("o")]
         Overlapped
     }
 
     public enum BarType
     {
+        [FlugleCharts.EnumUtils.Code("h")]
         Horizontal,
+
+        [FlugleCharts.EnumUtils.Code("v")]
         Vertical
     }
 }

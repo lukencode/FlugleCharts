@@ -1,6 +1,5 @@
-﻿using GChart.Charts;
-
-namespace GChart
+﻿
+namespace FlugleCharts
 {
     public static class ChartBuilder
     {
@@ -11,21 +10,7 @@ namespace GChart
 
         public static Pie Pie(PieType type)
         {
-            string typeCode = "p";
-
-            switch (type)
-            {
-                case PieType.Concentric:
-                    typeCode = "pc";
-                    break;
-                case PieType.ThreeDimensional:
-                    typeCode = "p3";
-                    break;
-                case PieType.TwoDimensional:
-                    typeCode = "p";
-                    break;
-            }
-
+            string typeCode = type.GetCode();
             return new Pie(typeCode);
         }
 
@@ -36,22 +21,7 @@ namespace GChart
 
         public static Line Line(LineType type)
         {
-            string typeCode = "lc";
-
-            switch (type)
-            {
-                case LineType.SparkLine:
-                    typeCode = "ls";
-                    break;
-                case LineType.LineXY:
-                    typeCode = "lxy";
-                    break;
-                case LineType.LineChart:
-                default:
-                    typeCode = "lc";
-                    break;
-            }
-
+            string typeCode = type.GetCode();
             return new Line(typeCode);
         }
 
@@ -62,48 +32,15 @@ namespace GChart
 
         public static Bar Bar(BarType type)
         {
-            string typeCode = "v";
-
-            switch (type)
-            {
-                case BarType.Horizontal:
-                    typeCode = "h";
-                    break;
-                case BarType.Vertical:
-                    typeCode = "v";
-                    break;
-            }
+            string typeCode = type.GetCode();
 
             return new Bar(typeCode, "g");
         }
 
         public static Bar Bar(BarType type, BarGroupType grouping)
         {
-            string typeCode = "v";
-            string group = "g";
-
-            switch (type)
-            {
-                case BarType.Horizontal:
-                    typeCode = "h";
-                    break;
-                case BarType.Vertical:
-                    typeCode = "v";
-                    break;
-            }
-
-            switch (grouping)
-            {
-                case BarGroupType.Grouped:
-                    group = "g";
-                    break;
-                case BarGroupType.Overlapped:
-                    group = "o";
-                    break;
-                case BarGroupType.Stacked:
-                    group = "s";
-                    break;
-            }
+            string typeCode = type.GetCode();
+            string group = grouping.GetCode();
 
             return new Bar(typeCode, group);
         }

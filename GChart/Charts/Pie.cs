@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace GChart.Charts
+namespace FlugleCharts
 {
     public class Pie : GChart<Pie>
     {
@@ -59,8 +59,13 @@ namespace GChart.Charts
 
     public enum PieType
     {
+        [FlugleCharts.EnumUtils.Code("p")]
         TwoDimensional,
+
+        [FlugleCharts.EnumUtils.Code("p3")]
         ThreeDimensional,
+
+        [FlugleCharts.EnumUtils.Code("pc")]
         Concentric
     }
 }

@@ -1,5 +1,5 @@
 ﻿
-namespace GChart.Charts
+namespace FlugleCharts
 {
     public class Line : GChart<Line>
     {
@@ -21,8 +21,13 @@ namespace GChart.Charts
 
     public enum LineType
     {
+        [FlugleCharts.EnumUtils.Code("lc")]
         LineChart,
+
+        [FlugleCharts.EnumUtils.Code("ls")]
         SparkLine,
+
+        [FlugleCharts.EnumUtils.Code("lxy")]
         LineXY
     }
 }

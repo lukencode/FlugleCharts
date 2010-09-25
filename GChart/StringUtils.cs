@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace GChart
+namespace FlugleCharts
 {
     internal static class StringUtils
     {

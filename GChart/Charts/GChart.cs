@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GCharts.Data;
 using System.Web;
 
-namespace GChart.Charts
+namespace FlugleCharts
 {
     public abstract class GChart<TChart> where TChart : GChart<TChart>
     {
@@ -77,21 +77,42 @@ namespace GChart.Charts
 
         public TChart AddAxes(AxesPosition position, int min, int max, int step, string title)
         {
-            string pos = "x";
-            switch (position)
+            string pos = position.GetCode();
+
+            var axes = new Axes
             {
-                case AxesPosition.left:
-                    pos = "y";
-                    break;
-                case AxesPosition.right:
-                    pos = "r";
-                    break;
-                case AxesPosition.top:
-                    pos = "t";
-                    break;
-                case AxesPosition.bottom:
-                    pos = "x";
-                    break;
+                Position = pos,
+                Min = min,
+                Max = max,
+                Step = step,
+                Title = title,
+                Index = (_axesList.Count() == 0) ? 0 : _axesList.Max(a => a.Index) + 1
+            };
+
+            _axesList.Add(axes);
+            return (TChart)this;
+        }
+
+
+        public TChart AddAxes(AxesPosition position, string title)
+        {
+            string pos = position.GetCode();
+
+            var firstSeries = _data.FirstOrDefault();
+            int max = 100;
+            int min = 0;
+            int step = 20;
+
+            if (firstSeries != null)
+            {
+                var maxVal = _data.Max(s => s.Max(d => d.Value));
+                max = Convert.ToInt32(maxVal);
+
+                min = 0; //Convert.ToInt32(_data.Min(s => s.Min(d => d.Value))); //or just zero?
+
+                var roundedStep = (double)max / 5d;
+                roundedStep = Math.Floor(roundedStep / 5);
+                step = (int)(roundedStep * 5);
             }
 
             var axes = new Axes
@@ -137,7 +158,7 @@ namespace GChart.Charts
             if (_axesList.Count > 0)
                 sb.Append("&" + BuildAxes());
 
-            return removeDoubles(sb.ToString());
+            return cleanUrl(sb.ToString());
         }
 
         protected virtual string BuildLegend()
@@ -194,6 +215,8 @@ namespace GChart.Charts
             string labels = "chxl=";
             string range = "chxr=";
 
+            bool hasLabels = false;
+
             for (int i = 0; i < _axesList.Count; i++)
             {
                 var axes = _axesList[i];
@@ -210,6 +233,7 @@ namespace GChart.Charts
                 //custom labels
                 if (axes.Labels.Count > 0)
                 {
+                    hasLabels = true;
                     labels += axes.Index + ":|";
 
                     for (int k = 0; k < axes.Labels.Count; k++)
@@ -224,7 +248,11 @@ namespace GChart.Charts
                 }
             }
 
-            var returnString = "{0}&{1}&{2}".With(types, labels, range);
+            var returnString = "{0}&{1}".With(types, range);
+
+            if (hasLabels)
+                returnString += "&" + labels;
+
             return returnString;
         }
 
@@ -251,8 +279,11 @@ namespace GChart.Charts
             return sb.ToString().Take(stringColor.Length - 1);
         }
 
-        private static string removeDoubles(string url)
+        private static string cleanUrl(string url)
         {
+            if (url.EndsWith("|") || url.EndsWith("&") || url.EndsWith(","))
+                url = url.Take(url.Length - 1);
+
             return url.Replace("&&", "&").Replace("||", "|").Replace(",,", ",");
         }
 

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace GCharts.Data
+namespace FlugleCharts
 {
     public class Series : List<DataPoint>
     {

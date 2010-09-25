@@ -1,5 +1,5 @@
 ﻿
-namespace GCharts.Data
+namespace FlugleCharts
 {
     public class DataPoint
     {
