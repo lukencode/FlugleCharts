@@ -23,10 +23,10 @@ namespace Test
             var pie = ChartBuilder.Pie()
                                   .Title("bar yo")
                                   .Size(400, 200)
-                                  .ShowLegend("r")
+                                  .ShowLegend(Position.right)
                                   .AddSeries(s1)
-                                  .AddAxes(AxesPosition.left, 0, 170, 30, "left data")
-                                  .AddAxes(AxesPosition.bottom, 1, 4, 1, "number");
+                                  .AddAxes(Position.left, 0, 170, 30, "left data")
+                                  .AddAxes(Position.bottom, 1, 4, 1, "number");
 
             Debug.WriteLine(pie.GetUrl());
 

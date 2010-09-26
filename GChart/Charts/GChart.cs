@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -60,10 +59,10 @@ namespace FlugleCharts
             return (TChart)this;
         }
 
-        public TChart ShowLegend(string position)
+        public TChart ShowLegend(Position position)
         {
             _showLegend = true;
-            _legendPosition = position;
+            _legendPosition = position.GetCode();
 
             return (TChart)this;
         }
@@ -75,9 +74,10 @@ namespace FlugleCharts
             return (TChart)this;
         }
 
-        public TChart AddAxes(AxesPosition position, int min, int max, int step, string title)
+        public TChart AddAxes(Position position, int min, int max, int step, string title = "")
         {
             string pos = position.GetCode();
+            var index = (_axesList.Count() == 0) ? 0 : _axesList.Max(a => a.Index) + 1;
 
             var axes = new Axes
             {
@@ -85,49 +85,93 @@ namespace FlugleCharts
                 Min = min,
                 Max = max,
                 Step = step,
-                Title = title,
-                Index = (_axesList.Count() == 0) ? 0 : _axesList.Max(a => a.Index) + 1
+                Index = index
             };
 
             _axesList.Add(axes);
-            return (TChart)this;
-        }
 
-
-        public TChart AddAxes(AxesPosition position, string title)
-        {
-            string pos = position.GetCode();
-
-            var firstSeries = _data.FirstOrDefault();
-            int max = 100;
-            int min = 0;
-            int step = 20;
-
-            if (firstSeries != null)
+            if (!title.IsNullOrEmpty())
             {
-                var maxVal = _data.Max(s => s.Max(d => d.Value));
-                max = Convert.ToInt32(maxVal);
+                //add axes title
+                var axesTitle = new Axes
+                {
+                    Position = pos,
+                    Index = index + 1,
+                    Labels = new List<string> { title }
+                };
 
-                min = 0; //Convert.ToInt32(_data.Min(s => s.Min(d => d.Value))); //or just zero?
-
-                var roundedStep = (double)max / 5d;
-                roundedStep = Math.Floor(roundedStep / 5);
-                step = (int)(roundedStep * 5);
+                _axesList.Add(axesTitle);
             }
 
+            return (TChart)this;
+        }
+
+        public TChart AddAxes(Position position, List<string> labels, string title = "")
+        {
+            string pos = position.GetCode();
+            var index = (_axesList.Count() == 0) ? 0 : _axesList.Max(a => a.Index) + 1;
+
             var axes = new Axes
             {
                 Position = pos,
-                Min = min,
-                Max = max,
-                Step = step,
-                Title = title,
-                Index = (_axesList.Count() == 0) ? 0 : _axesList.Max(a => a.Index) + 1
+                Labels = labels,
+                Index = index
             };
 
             _axesList.Add(axes);
+
+            if (!title.IsNullOrEmpty())
+            {
+                //add axes title
+                var axesTitle = new Axes
+                {
+                    Position = pos,
+                    Index = index + 1,
+                    Labels = new List<string> { title }
+                };
+
+                _axesList.Add(axesTitle);
+            }
+
             return (TChart)this;
         }
+
+        //probs not worth having VV
+
+        //public TChart AddAxes(Position position, string title)
+        //{
+        //    string pos = position.GetCode();
+
+        //    var firstSeries = _data.FirstOrDefault();
+        //    int max = 100;
+        //    int min = 0;
+        //    int step = 20;
+
+        //    if (firstSeries != null)
+        //    {
+        //        var maxVal = _data.Max(s => s.Max(d => d.Value));
+        //        max = Convert.ToInt32(maxVal);
+
+        //        min = 0; //Convert.ToInt32(_data.Min(s => s.Min(d => d.Value))); //or just zero?
+
+        //        var roundedStep = (double)max / 5d;
+        //        roundedStep = Math.Floor(roundedStep / 5);
+        //        step = (int)(roundedStep * 5);
+        //    }
+
+        //    var axes = new Axes
+        //    {
+        //        Position = pos,
+        //        Min = min,
+        //        Max = max,
+        //        Step = step,
+        //        Title = title,
+        //        Index = (_axesList.Count() == 0) ? 0 : _axesList.Max(a => a.Index) + 1
+        //    };
+
+        //    _axesList.Add(axes);
+        //    return (TChart)this;
+        //}
 
         public virtual string GetUrl()
         {
@@ -169,7 +213,7 @@ namespace FlugleCharts
             sb.Append("chdl=");
             foreach (var s in _data)
             {
-                sb.Append(s.Legend + "|");
+                sb.Append(HttpUtility.UrlEncode(s.Legend) + "|");
             }
 
             var stringData = sb.ToString();
@@ -201,7 +245,7 @@ namespace FlugleCharts
             {
                 foreach (var p in ds)
                 {
-                    sb.Append(p.Label + "|");
+                    sb.Append(HttpUtility.UrlEncode(p.Label) + "|");
                 }
             }
 
@@ -214,8 +258,11 @@ namespace FlugleCharts
             string types = "chxt=";
             string labels = "chxl=";
             string range = "chxr=";
+            string position = "chxp=";
 
             bool hasLabels = false;
+            bool hasRange = false;
+            bool hasPosition = false;
 
             for (int i = 0; i < _axesList.Count; i++)
             {
@@ -226,9 +273,14 @@ namespace FlugleCharts
                 if (!isLast)
                     types += ",";
 
-                range += "{0},{1},{2},{3}|".With(axes.Index, axes.Min, axes.Max, axes.Step);
-                if (!isLast)
-                    range += "|";
+                if (axes.StepSet)
+                {
+                    hasRange = true;
+
+                    range += "{0},{1},{2},{3}".With(axes.Index, axes.Min, axes.Max, axes.Step);
+                    if (!isLast)
+                        range += "|";
+                }
 
                 //custom labels
                 if (axes.Labels.Count > 0)
@@ -240,26 +292,44 @@ namespace FlugleCharts
                     {
                         bool lastLabel = (k == axes.Labels.Count - 1);
                         var label = axes.Labels[k];
-                        labels += label;
+                        labels += HttpUtility.UrlEncode(label);
 
                         if (!lastLabel || !isLast)
-                            label += "|";
+                            labels += "|";
                     }
+                }
+
+                //centre titles (maybe extend later to space all labels)
+                if (axes.Labels.Count == 1)
+                {
+                    if (hasPosition)
+                        position += "&";
+                    else
+                        hasPosition = true;
+
+                    position += axes.Index + ",50";
                 }
             }
 
-            var returnString = "{0}&{1}".With(types, range);
+            var sb = new StringBuilder();
+            sb.Append(types);
+
+            if (hasRange)
+                sb.Append("&" + range);
 
             if (hasLabels)
-                returnString += "&" + labels;
+                sb.Append("&" + labels);
 
-            return returnString;
+            if (hasPosition)
+                sb.Append("&" + position);
+
+            return sb.ToString();
         }
 
         protected virtual string BuildColors()
         {
             //Check if there are any colors set
-            var colors = _data.Where(s => !string.IsNullOrWhiteSpace(s.Color)).Select(s => s.Color);
+            var colors = _data.Where(s => s.Color != null).Select(s => s.Color);
 
             if (colors.Count() == 0)
             {
@@ -269,9 +339,9 @@ namespace FlugleCharts
             var sb = new StringBuilder();
 
             sb.Append("&chco=");
-            foreach (var color in colors)
+            foreach (var c in colors)
             {
-                sb.Append(color + ",");
+                sb.Append("{0:X2}{1:X2}{2:X2}".With(c.Value.R, c.Value.G, c.Value.B) + ","); //converts color to hex
             }
 
             var stringColor = sb.ToString();

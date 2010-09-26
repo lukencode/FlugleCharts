@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using FlugleCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,7 +14,7 @@ namespace Test
             var s1 = new Series()
             {
                 Legend = "data",
-                Color = "00FF00"
+                Color = Color.Blue
             };
 
             s1.Add(80);
@@ -24,7 +25,7 @@ namespace Test
             var s2 = new Series()
             {
                 Legend = "data 2",
-                Color = "FF0000"
+                Color = Color.Red
             };
 
             s2.Add(170);
@@ -35,11 +36,11 @@ namespace Test
             var line = ChartBuilder.Line()
                                   .Title("bar yo")
                                   .Size(400, 200)
-                                  .ShowLegend("r")
+                                  .ShowLegend(Position.right)
                                   .AddSeries(s1)
                                   .AddSeries(s2)
-                                  .AddAxes(AxesPosition.left, 0, 170, 30, "left data")
-                                  .AddAxes(AxesPosition.bottom, 1, 4, 1, "number");
+                                  .AddAxes(Position.left, 0, 170, 30, "left data")
+                                  .AddAxes(Position.bottom, 1, 4, 1, "number");
 
             Debug.WriteLine(line.GetUrl());
 
@@ -82,7 +83,7 @@ namespace Test
             var s1 = new Series()
             {
                 Legend = "Data",
-                Color = "0077CC"
+                Color = Color.Purple
             };
             s1.Add(27); s1.Add(25);
             s1.Add(60); s1.Add(31);
@@ -113,7 +114,7 @@ namespace Test
             var s1 = new Series()
             {
                 Legend = "data",
-                Color = "00FF00"
+                Color = Color.Green
             };
 
             s1.Add(80);
@@ -124,7 +125,7 @@ namespace Test
             var s2 = new Series()
             {
                 Legend = "data 2",
-                Color = "FF0000"
+                Color = Color.Aqua
             };
 
             s2.Add(370);
@@ -135,10 +136,9 @@ namespace Test
             var line = ChartBuilder.Line()
                                   .Title("bar yo")
                                   .Size(400, 200)
-                                  .ShowLegend("r")
+                                  .ShowLegend(Position.right)
                                   .AddSeries(s1)
-                                  .AddSeries(s2)
-                                  .AddAxes(AxesPosition.left, "left data");
+                                  .AddSeries(s2);
 
             Debug.WriteLine(line.GetUrl());
 

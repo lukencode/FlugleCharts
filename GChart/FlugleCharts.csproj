@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,6 +48,7 @@
     <Compile Include="Charts\GChart.cs" />
     <Compile Include="Charts\Line.cs" />
     <Compile Include="Charts\Pie.cs" />
+    <Compile Include="Charts\Position.cs" />
     <Compile Include="Data\DataPoint.cs" />
     <Compile Include="Data\Series.cs" />
     <Compile Include="EnumUtils.cs" />

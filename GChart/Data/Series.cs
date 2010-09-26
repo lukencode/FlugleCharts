@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -7,7 +8,7 @@ namespace FlugleCharts
     public class Series : List<DataPoint>
     {
         public string Legend { get; set; } //chdl
-        public string Color { get; set; } //chco
+        public Color? Color { get; set; } //chco
 
         private double? _topRange; //chds
         private double? _lowRange;
@@ -32,6 +33,11 @@ namespace FlugleCharts
 
                 return this.Min(d => d.Value);
             }
+        }
+
+        public Series()
+        {
+            Color = null;
         }
 
         public string RenderValues()
