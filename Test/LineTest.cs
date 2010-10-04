@@ -115,7 +115,10 @@ namespace Test
             var s1 = new Series
             {
                 Legend = "Ponies",
-                Color = ColorTranslator.FromHtml("#3072F3")
+                Color = ColorTranslator.FromHtml("#3072F3"),
+                LineThickness = 2,
+                DashLength = 4,
+                SpaceLength = 1
             };
             s1.Add(10); s1.Add(20);
             s1.Add(40); s1.Add(80);
@@ -154,7 +157,7 @@ namespace Test
             var url = line.GetUrl();
             Debug.WriteLine(url);
 
-            Assert.AreEqual(url, "http://chart.apis.google.com/chart?cht=lxy&chs=200x125&chd=t:10,20,40,80,90,95,99|20,30,40,50,60,70,80|-1|5,10,22,35,85&chco=3072F3,ff0000,00aaaa&chls=2,4,1&chm=s,000000,0,-1,5|s,000000,1,-1,5&chdl=Ponies|Unicorns&chdlp=t");
+            Assert.AreEqual(url, "http://chart.apis.google.com/chart?cht=lxy&chs=200x125&chls=2,4,1&chco=3072F3,FF0000,00AAAA&chd=t:10,20,40,80,90,95,99|20,30,40,50,60,70,80|-1|5,10,22,35,85&chdlp=t&chdl=Ponies|Unicorns&chm=s,000000,0,-1,5|s,000000,1,-1,5");
 
         }
 

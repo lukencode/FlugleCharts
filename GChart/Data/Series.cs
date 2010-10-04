@@ -10,6 +10,10 @@ namespace FlugleCharts
         public string Legend { get; set; } //chdl
         public Color? Color { get; set; } //chco
 
+        public int? LineThickness { get; set; }
+        public int? DashLength { get; set; }
+        public int? SpaceLength { get; set; }
+
         private double? _topRange; //chds
         private double? _lowRange;
 
@@ -38,6 +42,9 @@ namespace FlugleCharts
         public Series()
         {
             Color = null;
+            LineThickness = null;
+            DashLength = null;
+            SpaceLength = null;
         }
 
         public string RenderValues()
