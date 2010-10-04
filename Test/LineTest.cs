@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
-using System.Drawing;
-using FlugleCharts;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using FlugleCharts;
+using System.Drawing;
 
 namespace Test
 {
@@ -14,7 +15,7 @@ namespace Test
             var s1 = new Series()
             {
                 Legend = "data",
-                Color = Color.Blue
+                Color = Color.Green
             };
 
             s1.Add(80);
@@ -83,7 +84,7 @@ namespace Test
             var s1 = new Series()
             {
                 Legend = "Data",
-                Color = Color.Purple
+                Color = ColorTranslator.FromHtml("#0077CC")
             };
             s1.Add(27); s1.Add(25);
             s1.Add(60); s1.Add(31);
@@ -111,36 +112,49 @@ namespace Test
         [TestMethod]
         public void TestLine4()
         {
-            var s1 = new Series()
+            var s1 = new Series
             {
-                Legend = "data",
-                Color = Color.Green
+                Legend = "Ponies",
+                Color = ColorTranslator.FromHtml("#3072F3")
             };
+            s1.Add(10); s1.Add(20);
+            s1.Add(40); s1.Add(80);
+            s1.Add(90); s1.Add(95);
+            s1.Add(99);
 
-            s1.Add(80);
-            s1.Add(40);
-            s1.Add(210);
-            s1.Add(30);
-
-            var s2 = new Series()
-            {
-                Legend = "data 2",
-                Color = Color.Aqua
-            };
-
-            s2.Add(370);
-            s2.Add(15);
+            var s2 = new Series();
+            s2.Add(20); s2.Add(30);
+            s2.Add(40); s2.Add(50);
+            s2.Add(60); s2.Add(70);
             s2.Add(80);
-            s2.Add(340);
 
-            var line = ChartBuilder.Line()
-                                  .Title("bar yo")
-                                  .Size(400, 200)
-                                  .ShowLegend(Position.right)
+            var s3 = new Series
+            {
+                Legend = "Unicorns",
+                Color = Color.Red
+            };
+            s3.Add(-1);
+
+            var s4 = new Series
+            {
+                Color = ColorTranslator.FromHtml("#00aaaa")
+            };
+            s4.Add(5); s4.Add(10);
+            s4.Add(22); s4.Add(35);
+            s4.Add(85);
+
+            var line = ChartBuilder.Line(LineType.LineXY)
+                                  .Size(200, 125)
+                                  .ShowLegend(Position.top)
                                   .AddSeries(s1)
-                                  .AddSeries(s2);
+                                  .AddSeries(s2)
+                                  .AddSeries(s3)
+                                  .AddSeries(s4);
 
-            Debug.WriteLine(line.GetUrl());
+            var url = line.GetUrl();
+            Debug.WriteLine(url);
+
+            Assert.AreEqual(url, "http://chart.apis.google.com/chart?cht=lxy&chs=200x125&chd=t:10,20,40,80,90,95,99|20,30,40,50,60,70,80|-1|5,10,22,35,85&chco=3072F3,ff0000,00aaaa&chls=2,4,1&chm=s,000000,0,-1,5|s,000000,1,-1,5&chdl=Ponies|Unicorns&chdlp=t");
 
         }
 

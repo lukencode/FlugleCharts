@@ -211,7 +211,7 @@ namespace FlugleCharts
             sb.Append("chdlp=" + _legendPosition + "&"); //position
 
             sb.Append("chdl=");
-            foreach (var s in _data)
+            foreach (var s in _data.Where(ds => !string.IsNullOrWhiteSpace(ds.Legend)))
             {
                 sb.Append(HttpUtility.UrlEncode(s.Legend) + "|");
             }
@@ -243,7 +243,7 @@ namespace FlugleCharts
             sb.Append("&chl=");
             foreach (var ds in _data)
             {
-                foreach (var p in ds)
+                foreach (var p in ds.Where(p1 => !string.IsNullOrWhiteSpace(p1.Label)))
                 {
                     sb.Append(HttpUtility.UrlEncode(p.Label) + "|");
                 }
